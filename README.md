@@ -92,17 +92,32 @@ def float_to_fixed(x):
 ## Python工具链使用
 略
 
-##使用指南与可能出现的问题：
+## 🛠️ 使用指南
 
-###1.修改输入adc的比特数，调整信号的大小或者放大的倍数，尽量使得信号的幅值在20000LSB左右（以16bitADC为例）
+### ADC配置
+- 调整信号幅值至约20000 LSB（16位ADC）
+- 根据ADC位数修改归一化系数：
+  ```verilog
+  localparam ADC_BITS = 16;  // 按实际修改
+  ```
+- 调整MLP的ADC预处理部分中归一化系数（详情参照注释）
 
-###2.根据信号的比特数，调整MLP的ADC预处理部分中归一化系数（详情参照注释）
+### 模型训练
+- 当前默认高噪声的训练数据，必要时可重新训练：
+  ```bash
+  cd python/
+  python train_mlp.py
+  python pctofpga.py
+  ```
 
-###3.可能需要重新训练AI：当前python训练的模型，使用的训练数据为高噪声信号，用户可以根据需要微调重新训练
+### 缺失IP
+- **PLL IP**：27MHz→100MHz时钟生成（引自https://github.com/ZipCPU/dpll ，用户可以自行验证是否正确）
+- **DRAM IP**：存储20KB模型权重(.dat格式)
 
-###4.当前存在未包含的IP:（1）PLL(系统27M，生成100M,用于ADC采样，并且作为pll与mlp的工作时钟)；（2）DRAM（存储20k的模型权重参数，dat格式，python根据pth文件生成）
+### PLL注意事项
+- 采样时钟 ≤ 工作时钟/50
+- 工作时钟：100MHz → 最大采样时钟：2MHz
 
-###5.关于pll需要注意：采样时钟小于PLL工作时钟的1/50，因为处理过程使用了大量的时序逻辑，CORDIC迭代较多（引自https://github.com/ZipCPU/dpll ，用户可以自行验证是否正确）
 
 ## 开源许可
 
