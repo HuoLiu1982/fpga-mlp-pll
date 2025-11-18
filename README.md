@@ -40,7 +40,7 @@ FPGA, MLP, PLL, CORDIC, 波形识别, Pango
 │   ├── pctofpga.py   		# 量化与Verilog代码生成
 │   └── ...   				# 量化后模型验证;模型效果测试
 └── docs/                   # 技术文档
-    └── ReadMe.md     		# 项目介绍与使用指南
+    └── 效果展示.txt     		# 实际运行效果在线视频展示
 ```
 
 ## 核心模块说明
